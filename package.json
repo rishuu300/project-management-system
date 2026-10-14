@@ -1,0 +1,19 @@
+{
+  "name": "1_project_management_system",
+  "version": "1.0.0",
+  "description": "Project Management Application",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node index.js"
+  },
+  "keywords": [
+    "backend",
+    "API"
+  ],
+  "author": "Rishu Bhardwaj",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "3.9.10"
+  }
+}
