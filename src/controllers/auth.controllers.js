@@ -356,8 +356,30 @@ const forgotPasswordReset = asyncHandler(async (req, res) => {
         )
 });
 
+const changeCurrentPassword = asyncHandler(async (req, res) => {
+    const {oldPassword, newPassword} = req.body;
 
-// const getCurrentUser = asyncHandler(async (req, res) => {});
+    const user = await User.findById(req.user?._id);
+
+    const isPasswordValid = await user.isPasswordCorrect(oldPassword);
+
+    if (!isPasswordValid){
+        throw new APIError(400, "New password cannot be same as old password.");
+    }
+
+    user.password = newPassword;
+    await user.save({validateBeforeSave: false});
+
+    return res
+        .status(200)
+        .json(
+            new APIResponse(
+                200,
+                {},
+                "Password changed successfully."
+            )
+        )
+});
 
 export { 
     registerUser,
@@ -366,5 +388,8 @@ export {
     getCurrentUser,
     verifyEmail,
     resendEmailVerification,
-    refreshAccessToken 
+    refreshAccessToken,
+    forgotPasswordRequest,
+    forgotPasswordReset,
+    changeCurrentPassword,
 };
