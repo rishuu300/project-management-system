@@ -144,4 +144,19 @@ const logoutUser = asyncHandler(async (req, res) => {
         )
 });
 
-export { registerUser, login, logoutUser };
+const getCurrentUser = asyncHandler(async (req, res) => {
+    return res
+        .status(200)
+        .json(
+            new APIResponse(
+                200,
+                req.user,
+                "Current user fetched successfully."
+            )
+        )
+});
+
+
+// const getCurrentUser = asyncHandler(async (req, res) => {});
+
+export { registerUser, login, logoutUser, getCurrentUser };
