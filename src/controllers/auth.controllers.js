@@ -321,7 +321,7 @@ const forgotPasswordRequest = asyncHandler(async (req, res) => {
         )
 });
 
-const forgotPasswordReset = asyncHandler(async (req, res) => {
+const resetForgotPassword = asyncHandler(async (req, res) => {
     const {resetToken} = req.params;
     const {newPassword} = req.body;
 
@@ -390,6 +390,6 @@ export {
     resendEmailVerification,
     refreshAccessToken,
     forgotPasswordRequest,
-    forgotPasswordReset,
+    resetForgotPassword,
     changeCurrentPassword,
 };
