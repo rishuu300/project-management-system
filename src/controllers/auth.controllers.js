@@ -4,6 +4,8 @@ import { APIError } from '../utils/api-error.js';
 import { asyncHandler } from '../utils/async-handler.js';
 import { emailVerificationMailgenContent, forgotPasswordMailgenContent, sendEmail } from "../utils/mail.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import bcrypt from "bcrypt";
 
 const generateAccessAndRefreshTokens = async (userId) => {
     try {
@@ -239,7 +241,7 @@ const resendEmailVerification = asyncHandler(async (req, res) => {
 
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
-    const incomingRefreshToken = req.cookie.refreshToken || req.body.refreshToken;
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
     if (!incomingRefreshToken){
         throw new APIError(401, "Unauthoried access.");
@@ -294,7 +296,7 @@ const forgotPasswordRequest = asyncHandler(async (req, res) => {
         throw new APIError(404, "User does not exist.", []);
     }
 
-    const { unhashedToken, hashedToken, tokenExpiry } = user.generateAccessAndRefreshTokens();
+    const {unhashedToken, hashedToken, tokenExpiry} = user.generateTemporaryToken();
 
     user.forgotPasswordToken = hashedToken;
     user.forgotPasswordExpiry = tokenExpiry;
