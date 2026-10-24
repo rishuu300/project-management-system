@@ -64,4 +64,18 @@ const userForgotPasswordValidator = () =>{
     ]
 };
 
-export { userRegisterValidator, userLoginValidator, userChangeCurrentPasswordValidator, userForgotPasswordValidator };
+const userResetForgotPasswordValidator = () => {
+    return [
+        body("newPassword")
+            .notEmpty()
+            .withMessage("New password is required.")
+    ]
+};
+
+export {
+    userRegisterValidator, 
+    userLoginValidator, 
+    userChangeCurrentPasswordValidator, 
+    userForgotPasswordValidator, 
+    userResetForgotPasswordValidator
+};
