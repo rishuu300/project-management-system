@@ -40,6 +40,18 @@ const userLoginValidator = () => {
             .notEmpty()
             .withMessage("Password is required.")
     ];
-}
+};
 
-export { userRegisterValidator, userLoginValidator };
+const userChangeCurrentPasswordValidator = () => {
+    return [
+        body("oldPassword")
+            .notEmpty()
+            .withMessage("Old password is required."),
+        
+        body("newPassword")
+            .notEmpty()
+            .withMessage("New password is requried."),
+    ]
+};
+
+export { userRegisterValidator, userLoginValidator, userChangeCurrentPasswordValidator };
