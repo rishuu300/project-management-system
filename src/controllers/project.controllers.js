@@ -46,7 +46,34 @@ const createProject = asyncHandler(async (req, res) => {
 });
 
 const updateProject = asyncHandler(async (req, res) => {
-    //test
+    const {name, description} = req.body;
+    const {projectId} = req.params;
+
+    const project = await Project.findByIdAndUpdate(
+        projectId,
+        {
+            name,
+            description,
+        },
+
+        {
+            new: true
+        }
+    );
+
+    if (!project){
+        throw new APIError(404, "Project not found");
+    }
+
+    return res
+        .status(200)
+        .json(
+            new APIResponse(
+                200,
+                project,
+                "Project updated successfully."
+            )
+        )
 });
 
 const deleteProject = asyncHandler(async (req, res) => {
