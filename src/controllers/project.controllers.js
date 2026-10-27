@@ -4,8 +4,8 @@ import { ProjectMember } from "../models/projectmember.models.js";
 import { APIResponse } from '../utils/api-response.js';
 import { APIError } from '../utils/api-error.js';
 import { asyncHandler } from '../utils/async-handler.js';
-import mongoose, { Mongoose } from "mongoose";
 import { UserRolesEnum } from "../utils/constants.js";
+import mongoose from "mongoose";
 
 const getProjects = asyncHandler(async (req, res) => {
     const projects = await ProjectMember.aggregate(
@@ -175,7 +175,44 @@ const deleteProject = asyncHandler(async (req, res) => {
 });
 
 const addMembersToProject = asyncHandler(async (req, res) => {
-    //test
+    const {email, role} = req.body;
+    const {projectId} = req.params;
+
+    const user = await User.findOne({email});
+
+    if (!user){
+        throw new APIError(
+            404,
+            "User does not exist."
+        );
+    }
+
+    await ProjectMember.findByIdAndUpdate(
+        {
+            user: new mongoose.Types.ObjectId(user._id),
+            project: new mongoose.Types.ObjectId(projectId)
+        },
+
+        {
+            user: new mongoose.Types.ObjectId(user._id),
+            project: new mongoose.Types.ObjectId(projectId),
+            role: role
+        },
+
+        {
+            new: true,
+            upsert: true
+        }
+    );
+    return res
+        .status(201)
+        .json(
+            new APIResponse(
+                201,
+                {},
+                "Project member added successfully."
+            )
+        );
 });
 
 const getProjectMembers = asyncHandler(async (req, res) => {
