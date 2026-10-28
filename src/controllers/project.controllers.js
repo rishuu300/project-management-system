@@ -340,7 +340,42 @@ const updateMemberRole = asyncHandler(async (req, res) => {
 });
 
 const deleteMember = asyncHandler(async (req, res) => {
-    //test
+    const {projectId, userId} = req.params;
+    
+    let projectMember = await projectMember.findOne(
+        {
+            project: new mongoose.Types.ObjectId(projectId),
+            user: new mongoose.Types.ObjectId(userId),
+        }
+    );
+
+    if (!projectMember){
+        throw new APIError(
+            400,
+            "Project member not found."
+        );
+    }
+
+    projectMember = await ProjectMember.findByIdAndDelete(
+        projectMember._id
+    );
+
+    if (!projectMember){
+        throw new APIError(
+            400,
+            "Project member not found."
+        );
+    }
+
+    return res
+        .status(200)
+        .json(
+            new APIResponse(
+                200,
+                projectMember,
+                "Project member deleted successfully."
+            )
+        );
 });
 
 export {
