@@ -164,6 +164,10 @@ const deleteProject = asyncHandler(async (req, res) => {
         throw new APIError(404, "Project not found");
     }
 
+    await ProjectMember.deleteMany({
+        project: projectId
+    });
+
     return res
         .status(200)
         .json(
@@ -187,7 +191,7 @@ const addMembersToProject = asyncHandler(async (req, res) => {
         );
     }
 
-    await ProjectMember.findByIdAndUpdate(
+    await ProjectMember.findOneAndUpdate(
         {
             user: new mongoose.Types.ObjectId(user._id),
             project: new mongoose.Types.ObjectId(projectId)
@@ -216,7 +220,7 @@ const addMembersToProject = asyncHandler(async (req, res) => {
 });
 
 const getProjectMembers = asyncHandler(async (req, res) => {
-    const projectId = req.params;
+    const { projectId } = req.params;
     const project = await Project.findById(projectId);
 
     if (!project){
@@ -256,7 +260,7 @@ const getProjectMembers = asyncHandler(async (req, res) => {
             {
                 $addFields: {
                     user: {
-                        $arrayElemAt: ["User", 0]
+                        $arrayElemAt: ["$user", 0]
                     }
                 }
             },
@@ -296,7 +300,7 @@ const updateMemberRole = asyncHandler(async (req, res) => {
         );
     }
 
-    let projectMember = await projectMember.findOne(
+    let projectMember = await ProjectMember.findOne(
         {
             project: new mongoose.Types.ObjectId(projectId),
             user: new mongoose.Types.ObjectId(userId),
@@ -342,7 +346,7 @@ const updateMemberRole = asyncHandler(async (req, res) => {
 const deleteMember = asyncHandler(async (req, res) => {
     const {projectId, userId} = req.params;
     
-    let projectMember = await projectMember.findOne(
+    let projectMember = await ProjectMember.findOne(
         {
             project: new mongoose.Types.ObjectId(projectId),
             user: new mongoose.Types.ObjectId(userId),
