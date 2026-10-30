@@ -101,7 +101,7 @@ const createProject = asyncHandler(async (req, res) => {
         {
             name,
             description,
-            createBy: new mongoose.Types.ObjectId(req.user._id)
+            createdBy: new mongoose.Types.ObjectId(req.user._id)
         }
     );
 
